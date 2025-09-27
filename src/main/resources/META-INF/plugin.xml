@@ -26,6 +26,6 @@
         <toolWindow id="MCP Inspector Lite"
                     factoryClass="com.simonkaran.ai.kotlinmcpdebugger.plugin.PluginToolWindowFactory"
                     anchor="right"
-                    icon="AllIcons.Toolwindows.ToolWindowModuleDependencies"/>
+                    icon="/icons/mcpIcon.svg"/>
     </extensions>
 </idea-plugin>
