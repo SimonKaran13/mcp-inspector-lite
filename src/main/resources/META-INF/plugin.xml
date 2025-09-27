@@ -23,6 +23,9 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
+        <toolWindow id="MCP Inspector Lite"
+                    factoryClass="com.simonkaran.ai.kotlinmcpdebugger.plugin.PluginToolWindowFactory"
+                    anchor="right"
+                    icon="AllIcons.Toolwindows.ToolWindowModuleDependencies"/>
     </extensions>
 </idea-plugin>
