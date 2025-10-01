@@ -20,10 +20,15 @@ repositories {
 // Configure IntelliJ Platform Gradle Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-intellij-platform-gradle-plugin.html
 dependencies {
+    // Compose UI
     implementation(compose.desktop.currentOs)
     implementation(compose.runtime)
     implementation(compose.foundation)
     implementation(compose.material3)
+
+    // MCP Client
+    implementation("io.modelcontextprotocol:kotlin-sdk:0.7.2")
+    implementation("io.ktor:ktor-client-cio:3.3.0")
 
     intellijPlatform {
         create("IC", "2025.1.4.1")
@@ -31,6 +36,9 @@ dependencies {
         // Add necessary plugin dependencies for compilation here, example:
         // bundledPlugin("com.intellij.java")
     }
+    
+    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
 }
 
 intellijPlatform {
