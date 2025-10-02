@@ -135,15 +135,31 @@ class McpViewModel : Disposable {
         ApplicationManager.getApplication().invokeLater(block)
     }
 
-    private fun parseJsonParameters(json: String): Map<String, String> {
+    private fun parseJsonParameters(json: String): Map<String, Any?> {
         return try {
             val jsonElement = Json.parseToJsonElement(json)
             if (jsonElement is JsonObject) {
-                jsonElement.mapValues { it.value.toString().trim('"') }
+                jsonElement.mapValues { (_, value) ->
+                    when (value) {
+                        is kotlinx.serialization.json.JsonPrimitive -> {
+                            when {
+                                value.isString -> value.content
+                                value.content == "true" || value.content == "false" -> value.content.toBoolean()
+                                value.content.toIntOrNull() != null -> value.content.toInt()
+                                value.content.toDoubleOrNull() != null -> value.content.toDouble()
+                                else -> value.content
+                            }
+                        }
+                        is JsonObject -> value.toString()
+                        is kotlinx.serialization.json.JsonArray -> value.toString()
+                        else -> value.toString()
+                    }
+                }
             } else {
                 emptyMap()
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             emptyMap()
         }
     }

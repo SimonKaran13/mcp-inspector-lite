@@ -24,8 +24,7 @@ class McpViewModelTest {
         
         // Set some state
         viewModel.updateRequestParameters("{\"test\": \"value\"}")
-        
-        // Disconnect
+
         viewModel.disconnect()
         
         assertEquals(McpViewModel.ConnectionStatus.DISCONNECTED, viewModel.connectionStatus)

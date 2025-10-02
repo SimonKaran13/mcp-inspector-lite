@@ -45,12 +45,13 @@ class McpClient(
         }
     }
 
-    suspend fun callTool(name: String, args: Map<String, String>): String? = withContext(Dispatchers.IO) {
+    suspend fun callTool(name: String, args: Map<String, Any?>): String? = withContext(Dispatchers.IO) {
         require(isConnected) { "No connection to the server, can't call tool $name" }
 
         val response = client.callTool(name, args) ?: return@withContext null
 
-        response.structuredContent.toString()
+        // Extract content from the response and convert to string
+        response.content.joinToString("\n") { it.toString() }
     }
 
     private fun buildTransport(): Transport =
