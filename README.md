@@ -6,7 +6,7 @@ An IntelliJ IDEA plugin for inspecting and testing Model Context Protocol (MCP) 
 
 ### 1. Running an MCP Server
 
-This plugin is designeda and tested to work with the **MCP Server Filesystem**. Start it with:
+This plugin is designed and tested to work with the **MCP Server Filesystem**. Start it with:
 
 ```bash
 npx -y @modelcontextprotocol/server-filesystem /path/to/directory
@@ -73,3 +73,6 @@ The plugin JAR will be in `build/libs/kotlin-mcp-debugger-1.0-SNAPSHOT.jar`
 - IntelliJ IDEA 2025.1.4.1 or later
 - Java 21
 - Node.js and npm/npx (for running MCP servers)
+
+## AI use
+See [AI Usage Documentation](docs/AI_PROMPTS.md)
