@@ -12,9 +12,9 @@ This plugin is designeda and tested to work with the **MCP Server Filesystem**. 
 npx -y @modelcontextprotocol/server-filesystem /path/to/directory
 ```
 
-For example, to inspect your home directory:
+For example, to inspect your home directory in MacOS:
 ```bash
-npx -y @modelcontextprotocol/server-filesystem /Users/yourusername
+npx -y @modelcontextprotocol/server-filesystem /Users/${USERNAME}
 ```
 
 The server will provide tools like:
@@ -44,6 +44,7 @@ The plugin JAR will be in `build/libs/kotlin-mcp-debugger-1.0-SNAPSHOT.jar`
 1. In the tools bar in the left side of the IDE you should see the MCP Icon -> **MCP Inspector Lite**
 
 2. Configure the connection:
+   - **Transport:** `STDIO`
    - **Command:** `npx`
    - **Args:** `-y @modelcontextprotocol/server-filesystem /`
    - Leave **Env** empty
