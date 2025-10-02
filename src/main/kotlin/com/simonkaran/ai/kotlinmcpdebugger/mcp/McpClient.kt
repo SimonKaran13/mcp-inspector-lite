@@ -20,7 +20,7 @@ class McpClient(
     private val httpClient: HttpClient,
     private val client: Client = Client(
         clientInfo = Implementation(
-            name = "mcp-inspect-lite-stdio-client",
+            name = "mcp-inspector-lite-client",
             version = "1.0.0"
         )
     )
