@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
-import com.simonkaran.ai.kotlinmcpdebugger.ui.McpViewModel
+import com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.McpViewModel
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ConnectionConfigurationComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolDetailsComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolListComponent

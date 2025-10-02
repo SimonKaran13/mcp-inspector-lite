@@ -1,4 +1,4 @@
-package com.simonkaran.ai.kotlinmcpdebugger.ui
+package com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,6 @@ import com.simonkaran.ai.kotlinmcpdebugger.mcp.McpClient
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.McpTool
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.connection.McpServerConnectionDetails
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.connection.McpTransportMode
-import com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.ConnectionConfiguration
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.*
@@ -141,7 +140,7 @@ class McpViewModel : Disposable {
             if (jsonElement is JsonObject) {
                 jsonElement.mapValues { (_, value) ->
                     when (value) {
-                        is kotlinx.serialization.json.JsonPrimitive -> {
+                        is JsonPrimitive -> {
                             when {
                                 value.isString -> value.content
                                 value.content == "true" || value.content == "false" -> value.content.toBoolean()
@@ -151,7 +150,7 @@ class McpViewModel : Disposable {
                             }
                         }
                         is JsonObject -> value.toString()
-                        is kotlinx.serialization.json.JsonArray -> value.toString()
+                        is JsonArray -> value.toString()
                         else -> value.toString()
                     }
                 }

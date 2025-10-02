@@ -1,7 +1,7 @@
 package com.simonkaran.ai.kotlinmcpdebugger
 
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.McpTool
-import com.simonkaran.ai.kotlinmcpdebugger.ui.McpViewModel
+import com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.McpViewModel
 import kotlinx.serialization.json.JsonObject
 import kotlin.test.Test
 import kotlin.test.assertEquals
