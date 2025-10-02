@@ -11,15 +11,16 @@ import java.awt.BorderLayout
 class PluginToolWindowFactory : ToolWindowFactory {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        val content = ContentFactory.getInstance().createContent(null, "", false)
         val root = JPanel(BorderLayout())
         root.add(
             ComposePanel().apply {
                 setContent {
-                    PluginWindowContent(project)
+                    PluginWindowContent(project, content)
                 }
              },
             BorderLayout.CENTER)
-        val content = ContentFactory.getInstance().createContent(root, "", false)
+        content.component = root
         toolWindow.contentManager.addContent(content)
     }
 

@@ -3,6 +3,8 @@ package com.simonkaran.ai.kotlinmcpdebugger.ui
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.McpClient
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.McpTool
 import com.simonkaran.ai.kotlinmcpdebugger.mcp.connection.McpServerConnectionDetails
@@ -13,8 +15,8 @@ import io.ktor.client.engine.cio.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.*
 
-class McpViewModel {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+class McpViewModel : Disposable {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val httpClient = HttpClient(CIO)
     private var mcpClient: McpClient? = null
 
@@ -39,8 +41,10 @@ class McpViewModel {
     fun connect(config: ConnectionConfiguration) {
         scope.launch {
             try {
-                connectionStatus = ConnectionStatus.CONNECTING
-                errorMessage = null
+                invokeLater {
+                    connectionStatus = ConnectionStatus.CONNECTING
+                    errorMessage = null
+                }
 
                 val serverDetails = config.toServerConnectionDetails()
                 mcpClient = McpClient(serverDetails, httpClient)
@@ -48,12 +52,17 @@ class McpViewModel {
 
                 // Load tools after connection
                 loadTools()
-                connectionStatus = ConnectionStatus.CONNECTED
+                
+                invokeLater {
+                    connectionStatus = ConnectionStatus.CONNECTED
+                }
             } catch (e: Exception) {
-                connectionStatus = ConnectionStatus.ERROR
-                errorMessage = "Connection failed: ${e.javaClass.simpleName}: ${e.message}\n${e.stackTraceToString().take(500)}"
+                invokeLater {
+                    connectionStatus = ConnectionStatus.ERROR
+                    errorMessage = "Connection failed: ${e.javaClass.simpleName}: ${e.message}"
+                }
                 mcpClient = null
-                e.printStackTrace() // Log to console for debugging
+                e.printStackTrace()
             }
         }
     }
@@ -89,26 +98,41 @@ class McpViewModel {
         val tool = selectedTool ?: return
         scope.launch {
             try {
-                errorMessage = null
+                invokeLater {
+                    errorMessage = null
+                }
                 val params = parseJsonParameters(requestParameters)
                 val result = mcpClient?.callTool(tool.name, params)
-                resultJson = result?.let { formatJson(it) } ?: "{}"
+                invokeLater {
+                    resultJson = result?.let { formatJson(it) } ?: "{}"
+                }
             } catch (e: Exception) {
-                errorMessage = "Request failed: ${e.javaClass.simpleName}: ${e.message}"
-                resultJson = ""
-                e.printStackTrace() // Log to console for debugging
+                invokeLater {
+                    errorMessage = "Request failed: ${e.javaClass.simpleName}: ${e.message}"
+                    resultJson = ""
+                }
+                e.printStackTrace()
             }
         }
     }
 
     private suspend fun loadTools() {
         try {
-            availableTools = mcpClient?.listTools() ?: emptyList()
+            val tools = mcpClient?.listTools() ?: emptyList()
+            invokeLater {
+                availableTools = tools
+            }
         } catch (e: Exception) {
-            errorMessage = "Failed to load tools: ${e.javaClass.simpleName}: ${e.message}"
-            availableTools = emptyList()
-            e.printStackTrace() // Log to console for debugging
+            invokeLater {
+                errorMessage = "Failed to load tools: ${e.javaClass.simpleName}: ${e.message}"
+                availableTools = emptyList()
+            }
+            e.printStackTrace()
         }
+    }
+    
+    private fun invokeLater(block: () -> Unit) {
+        ApplicationManager.getApplication().invokeLater(block)
     }
 
     private fun parseJsonParameters(json: String): Map<String, String> {
@@ -147,7 +171,7 @@ class McpViewModel {
         }
     }
 
-    fun dispose() {
+    override fun dispose() {
         scope.cancel()
         httpClient.close()
     }
@@ -164,12 +188,16 @@ private fun ConnectionConfiguration.toServerConnectionDetails(): McpServerConnec
     return when (mode) {
         com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.McpTransportMode.STDIO -> {
             val argsList = args.trim().split("\\s+".toRegex()).filter { it.isNotBlank() }
-            val envMap = env.split(";")
-                .filter { it.contains("=") }
-                .associate {
-                    val (k, v) = it.split("=", limit = 2)
-                    k.trim() to v.trim()
-                }
+            val envMap = if (env.isNotBlank()) {
+                env.split(";")
+                    .filter { it.contains("=") }
+                    .associate {
+                        val (k, v) = it.split("=", limit = 2)
+                        k.trim() to v.trim()
+                    }
+            } else {
+                emptyMap()
+            }
             McpServerConnectionDetails(
                 transportMode = McpTransportMode.STDIO,
                 command = command,
@@ -178,12 +206,16 @@ private fun ConnectionConfiguration.toServerConnectionDetails(): McpServerConnec
             )
         }
         com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.McpTransportMode.STREAMABLE_HTTP -> {
-            val headersMap = headers.split(";")
-                .filter { it.contains("=") }
-                .associate {
-                    val (k, v) = it.split("=", limit = 2)
-                    k.trim() to v.trim()
-                }
+            val headersMap = if (headers.isNotBlank()) {
+                headers.split(";")
+                    .filter { it.contains("=") }
+                    .associate {
+                        val (k, v) = it.split("=", limit = 2)
+                        k.trim() to v.trim()
+                    }
+            } else {
+                emptyMap()
+            }
             McpServerConnectionDetails(
                 transportMode = McpTransportMode.STREAMABLE_HTTP,
                 url = url,

@@ -71,7 +71,7 @@ class McpClient(
                 environment().putAll(serverDetails.env)
             }
             .start()
-
+        
         return StdioClientTransport(
             input = process.inputStream.asInput().buffered(),
             output = process.outputStream.asSink().buffered()

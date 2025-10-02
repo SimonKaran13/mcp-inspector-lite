@@ -7,7 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Disposer
 import com.simonkaran.ai.kotlinmcpdebugger.ui.McpViewModel
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ConnectionConfigurationComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolDetailsComponent
@@ -15,15 +17,13 @@ import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolListComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.ConnectionConfiguration
 
 @Composable
-fun PluginWindowContent(project: Project) {
-    val viewModel = remember { McpViewModel() }
-    var cfg by remember { mutableStateOf(ConnectionConfiguration()) }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            viewModel.dispose()
-        }
+fun PluginWindowContent(project: Project, parentDisposable: Disposable) {
+    val viewModel = remember { 
+        McpViewModel().also { 
+            Disposer.register(parentDisposable, it)
+        } 
     }
+    var cfg by remember { mutableStateOf(ConnectionConfiguration()) }
 
     MaterialTheme {
         Column(
