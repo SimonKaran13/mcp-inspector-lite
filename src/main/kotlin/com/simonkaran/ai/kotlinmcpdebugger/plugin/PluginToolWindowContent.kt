@@ -15,6 +15,7 @@ import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ConnectionConfiguration
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolDetailsComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.components.ToolListComponent
 import com.simonkaran.ai.kotlinmcpdebugger.ui.viewmodel.ConnectionConfiguration
+import com.simonkaran.ai.kotlinmcpdebugger.ui.theme.IntelliJMaterialTheme
 
 @Composable
 fun PluginWindowContent(project: Project, parentDisposable: Disposable) {
@@ -25,7 +26,7 @@ fun PluginWindowContent(project: Project, parentDisposable: Disposable) {
     }
     var cfg by remember { mutableStateOf(ConnectionConfiguration()) }
 
-    MaterialTheme {
+    IntelliJMaterialTheme {
         Column(
             modifier = Modifier
                 .fillMaxSize()

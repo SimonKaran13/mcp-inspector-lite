@@ -55,7 +55,7 @@ The plugin JAR will be in `build/libs/kotlin-mcp-debugger-1.0-SNAPSHOT.jar`
 
 5. Select a tool, edit JSON parameters, and click **Send**
 
-## Example: List Directory
+### Example: List Directory
 
 1. Connect to the filesystem server
 2. Select `list_directory` tool
@@ -67,6 +67,9 @@ The plugin JAR will be in `build/libs/kotlin-mcp-debugger-1.0-SNAPSHOT.jar`
    ```
 4. Click **Send**
 5. View results
+
+### Dark Theme Support
+The plugin supports dark theme, but you need to re-open the tool window so that the UI updates to the theme correctly.
 
 ## Requirements
 
